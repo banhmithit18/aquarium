@@ -1,18 +1,45 @@
 <?php
     include 'header.php';
+    include 'util/DBConnection.php';
 ?>
-<!-- contens my web-->
-<!-- <section>
-    <img src="images/shark.jpg" style="width: 1920px; height: 1080px;">
-</section> -->
-<!-- <style>
-    body{
-        background-image: url(images/shark.jpg);
+<?php
+    function getEvent(){
+        $open = OpenConnection();
+        $sql = "SELECT * from event";
+        $get = sqlsrv_query($open, $sql);
+        while($event = sqlsrv_fetch_array($get, SQLSRV_FETCH_ASSOC)){
+            $name = $event['eventname'];
+            $detail = $event['eventdetail'];
+            $time = $event['eventtime'];
+            $img = $event['eventimg'];
+            echo "
+            <div class=\"container col-8 centerPage\" style=\"padding-left: 30px; margin-bottom: 25px;\">
+                <div style=\"padding-left: 15px;\">
+                    <span style=\"font-weight: bold; font-size: 18px; color:darkorange;\">$name</span>
+                </div>
+                <div style=\"display: flex;\">
+                    <div style=\"width: 320px;\">
+                        <img src=\"$img.jpg\" alt=\"\" style=\"width: 100%;\">
+                    </div>
+                    <div style=\"margin-left: 15px;\">
+                        <span style=\"font-weight: bold\">$detail
+                        </span>
+                        <br>
+                        <span style=\"font-weight: bold; font-size: 13px;\">
+                            Time: $time
+                        </span>
+                        <br>
+                        <div style=\"padding-left: 10px;\">
+                            <span style=\"font-weight: bold; font-size: 13px;\"><a href=\"Ticket.php\"
+                                    style=\"color: darkorange;\">Click here to buy tickets</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ";
+        }
     }
-</style> -->
-<!-- <div style="background-color: red; height: 100px; z-index: 20;">
-
-</div> -->
+ ?>
 <style>
 .middle {
     position: absolute;
@@ -62,14 +89,11 @@
 }
 
 #main {
-
-
-
     margin-top: 100px;
     margin-bottom: 100px;
 
     border-radius: 15px;
-    height: 500px;
+    height: 550px;
     width: 100%;
     /* background: rgba(0, 0, 0, 0.2); */
 }
@@ -89,35 +113,44 @@
     overflow: hidden;
     position: absolute;
 }
+
+#content {
+    color: #000;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.5em;
+    font-size: 19px;
+}
 </style>
 <script>
-// $(document).ready(function(){
-//     $('#btn-click').click(function(){
-//         $("#panel-header-1").attr("src","images/panel-header-2.jpg");
-//     });
-// });
+
 </script>
 <div style="height: auto;">
     <!-- panel-header. -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators" style="left: -1288px;">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active" style="width: 15px;"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1" style="width: 15px;"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2" style="width: 15px;"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="3" style="width: 15px;"></li>
+        <ol class="carousel-indicators" style="left: -1288px;" id="ol-choose">
+            <li id="li1" data-target="#carouselExampleIndicators" data-slide-to="0" class="active" style="width: 15px;">
+            </li>
+            <li id="li2" data-target="#carouselExampleIndicators" data-slide-to="1" style="width: 15px;"></li>
+            <li id="li3" data-target="#carouselExampleIndicators" data-slide-to="2" style="width: 15px;"></li>
+            <li id="li4" data-target="#carouselExampleIndicators" data-slide-to="3" style="width: 15px;"></li>
         </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="d-block w-100" id="panel-header-1" src="images\panel-header-1.jpg" alt="First slide">
+        <div class="carousel-inner" id="background-header">
+            <div class="carousel-item active" id="img1">
+                <img class="d-block w-100" id="panel-header-1" src="images\panel-header\panel-header-1.jpg"
+                    alt="First slide">
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" id="panel-header-2" src="images\panel-header-2.jpg" alt="Second slide">
+            <div class="carousel-item" id="img2">
+                <img class="d-block w-100" id="panel-header-2" src="images\panel-header\panel-header-2.jpg"
+                    alt="Second slide">
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" id="panel-header-3" src="images\panel-header-3.png" alt="Third slide">
+            <div class="carousel-item" id="img3">
+                <img class="d-block w-100" id="panel-header-3" src="images\panel-header\panel-header-3.png"
+                    alt="Third slide">
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" id="panel-header-4" src="images\panel-header-4.jpg" alt="Third slide">
+            <div class="carousel-item" id="img4">
+                <img class="d-block w-100" id="panel-header-4" src="images\panel-header\panel-header-4.jpg"
+                    alt="Third slide">
             </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -130,7 +163,7 @@
         </a>
     </div>
     <!-- main -->
-    <div style="background: url(images/blue-snow.png); height: 1300px; width: 100%;">
+    <div style="background: url(images/blue-snow.png); height: 2000px; width: 100%;">
         <div class="container col-12 centerPage"
             style="background-color: red; display: flex; width: 100%; padding-left: 130px; top: -90px;">
             <!-- Open Time  -->
@@ -180,7 +213,7 @@
                                     style="position:absolute; width: 166px; height: 166px; z-index: 10; left: 101px; top: 9px;">
                                 <span
                                     style="position: absolute;top: 109px;left: 100px; z-index:11; font-family: Daftbrush; width: 200px; padding-left: 36px; font-size: 15px; color: white;font-style: normal;">
-                                    <a href="" style="color: white;">Get your Tickets</a>
+                                    <a href="buyticket.php" style="color: white;">Get your Tickets</a>
                                 </span>
                             </div>
                         </div>
@@ -232,145 +265,122 @@
         </div>
         <br>
         <br>
-        <div class="container col-8 centerPage" id="main" style="">
-            <div class="container" style="display:flex;">
-                <!-- main -->
-                <div class=" col-10">
+        <div class="container col-8 centerPage" id="main">
+            <div class="container col-12 centerPage">
+                <div style="text-align: center;">
                     <span
-                        style=" font-size: 42px; font-weight: 500; color: #00789a; line-height: 1em; letter-spacing: -.04em;">
-                        Lemon-coloured pufferfish
+                        style="font-size: 48px;font-style: normal;font-weight: 600;letter-spacing: -1.92px;line-height: 48px;color: #00789a;margin-bottom: 15px;">Welcome
+                        to Aquarium</span>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <span id="content">
+                        Aquarium is one of in Ho Chi Minh city best-known and most notable aquariums. Behind the
+                        building’s
+                        historic façade awaits an impressive diversity of species that few facilities in the world can
+                        rival. The Aquarium not only houses numerous extraordinary fish, it is also home to hundreds of
+                        impressive reptiles and insects.
                     </span>
-                    <div class="col-10" style="padding-left: 0px; padding-top: 20px;margin-bottom: 20px;">
-                        <span style="font-size: 20px;">
-                            The pufferfish family consists of two subfamilies with a total of 26 genera and 190 valid
-                            species. The lemon-coloured pufferfish belongs to the arothron genus with 15 species. Its
-                            circulation area extends over the Indian Ocean and the Pacific, from the coast of Eastern
-                            and Southern Africa to Japan, Easter Island and Panama. They live in coral-rich, shallow
-                            areas above the 25-metre mark there.
-                        </span>
+                </div>
+                <div style="height: 500px;">
+                    <img src="images\covid.jpg" alt="" style="float: left; width: 97%;">
+                </div>
+
+            </div>
+
+        </div>
+        <div class="container col-8 centerPage" style="padding-left: 30px; height: 330px;">
+            <div style="position: absolute;">
+                <img src="images\ticket-online.jpg" alt="" style="position: absolute; z-index:1;">
+                <span
+                    style="position: absolute; z-index:1; top: 250px; width: 200px; font-size: 18px; font-weight: bolder; left: 20px;"><a
+                        href="Ticket.php" style="color: white;">Buy online ticket</a></span>
+            </div>
+            <div style="position: absolute; left: 362px;">
+                <img src="images\href_animal.jpg" alt="" style="position: absolute; z-index:1;">
+                <span
+                    style="position: absolute; z-index:1; top: 250px; width: 200px; font-size: 18px; font-weight: bolder; left: 182px;"><a
+                        href="Animals.php" style="color: white;">Our Animal</a></span>
+            </div>
+        </div>
+        <div class="container col-8 centerPage" style="padding-left: 30px;">
+            <div style="margin-bottom:15px;">
+                <span
+                    style="font-size: 48px;font-style: normal;font-weight: 600;letter-spacing: -1.92px;line-height: 48px;color: #00789a;margin-bottom: 15px;">
+                    Event
+                </span>
+            </div>
+            <div style="margin-bottom: 25px;">
+                <span id="content">
+                    In water and on land, mysterious creatures are waiting to be discovered. Plunge into the fascinating
+                    world of jellyfish, and get acquainted with some of the sea animal kingdom’s weirdest and most
+                    wonderful shapes and colours.
+                    The numerous events at Aquarium are an occasion to remember for children and adults alike.
+                </span>
+            </div>
+        </div>
+        <div id="event">
+            <?php
+                getEvent();
+             ?>
+            <!-- <div class="container col-8 centerPage" style="padding-left: 30px; ">
+                <div style="padding-left: 15px;">
+                    <span style="font-weight: bold; font-size: 18px; color:darkorange;">The mermaid appeared</span>
+                </div>
+                <div style="display: flex;">
+                    <div style="width: 320px;">
+                        <img src="images\nangtienca.jpg" alt="" style="width: 100%;">
                     </div>
-                    <!-- fish -->
-                    <div class="col-10" id="fish" style="height: auto;">
-                        <div class="container-fluid" style="padding: 5px; padding-top: 10px;">
-                            <img src="images\ca1.jpg" alt="" style="height: 431px; width: 100%; margin-bottom: 20px;">
-                            <div style="margin-bottom: 40px;">
-                                <span style="font-size: 20px; font-weight: bold; color: white;">CHARACTERISTICS</span>
-                            </div>
-                            <div class="container" style="display: flex;">
-                                <div class="col-6">
-                                    <div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 18px; font-weight: bold; color: white;">Origin</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Viet
-                                                Nam</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 18px; font-weight: bold; color: white;">Haibitat</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Coral
-                                                reefs</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span style="font-size: 18px; font-weight: bold; color: white;">Diet</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Plankton
-                                                and small crustaceans</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 18px; font-weight: bold; color: white;">Status</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">least
-                                                concern</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- right -->
-                                <div class="col-6">
-                                    <div>
-                                        <div class="container">
-                                            <span style="font-size: 18px; font-weight: bold; color: white;">Size</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">6
-                                                to 8 cm</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 18px; font-weight: bold; color: white;">Weight</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Unknown</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span style="font-size: 18px; font-weight: bold; color: white;">Brooding
-                                                Time</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Larval
-                                                stage of the eggs approx. 2–3 weeks, endure brooding care</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="container">
-                                            <span style="font-size: 18px; font-weight: bold; color: white;">Achievable
-                                                age</span>
-                                        </div>
-                                        <div class="container">
-                                            <span
-                                                style="font-size: 15px;font-weight: 400; color: white; padding-left: 9px;">Up
-                                                to approx. 15 years</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                    <div style="margin-left: 15px;">
+                        <span style="font-weight: bold">
+                            Every Saturday at aquarium you will be able to see the mermaids swimming in the ocean
+                            firsthand,
+                            do not miss this special event.
+                        </span>
+                        <br>
+                        <span style="font-weight: bold; font-size: 13px;">
+                            Time: Saturday 10:00 AM | 11:00 AM | 1:00 PM | 2:00 PM | 3:00 PM every week
+                        </span>
+                        <br>
+                        <div style="padding-left: 10px;">
+                            <span style="font-weight: bold; font-size: 13px;"><a href="Ticket.php"
+                                    style="color: darkorange;">Click here to buy tickets</a></span>
                         </div>
 
                     </div>
-                    <div>
-                        <?php
-                            $myfile = fopen("GTAV.txt", "r") or die("Unable to open file!");
-                            echo fread($myfile,filesize("GTAV.txt"));
-                            fclose($myfile);
-                         ?>
+                </div>
+
+            </div>
+            <div class="container col-8 centerPage" style="padding-left: 30px; margin-top: 25px;">
+                <div style="padding-left: 15px;">
+                    <span style="font-weight: bold; font-size: 18px; color:darkorange;">Fish feeding show</span>
+                </div>
+                <div style="display: flex;">
+                    <div style="width: 570px;">
+                        <img src="images\8-.Cho-cá-ăn.jpg" alt="" style="width: 100%;">
+                    </div>
+                    <div style="margin-left: 15px;">
+                        <span style="font-weight: bold">
+                            Have you seen how much fun the colorful sea creatures are fed? Then head over to the
+                            aquarium at the Aquarium to see for yourself how happy the adorable fishes are when they are
+                            fed.
+                            Don't forget the schedule of this program
+                        </span>
+                        <br>
+                        <span style="font-weight: bold; font-size: 13px;">
+                            Time: 8:00 AM | 1:00 PM | 4:00 PM every day
+                        </span>
+                        <br>
+                        <div style="padding-left: 10px;">
+                            <span style="font-weight: bold; font-size: 13px;"><a href="Ticket.php"
+                                    style="color: darkorange;">Click here to buy tickets</a></span>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- quảng cáo -->
-                <!-- <div class="col-2">
-                    <img src="images/logo-aquarium-final.png" alt="">
-                </div> -->
-            </div>
+            </div> -->
         </div>
     </div>
-</div>
-<?php
+    <?php
     include 'footer.php';
 ?>

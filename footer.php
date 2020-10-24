@@ -38,9 +38,9 @@ li a:hover {
         </div>
     </div>
 </footer>
-<footer style="height: 100px;">
+<!-- <footer style="height: 100px;">
 
-</footer>
+</footer> -->
 <script src="js/jquery-3.5.1.js"></script>
     <script src="js/bootstrap.js"></script>
     <script type="text/javascript">

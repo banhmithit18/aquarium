@@ -72,9 +72,7 @@
                 });
             });
             $('#register').click(function() {
-                // window.location.href = "RegisterForm.php";
-                alert($('#checkRemember').prop('checked'));
-
+                window.location.href = "RegisterForm.php";
             });
         });
         </script>

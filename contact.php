@@ -5,6 +5,20 @@
 </style>
 <script>
 $(document).ready(function() {
+    var i;
+    var code = "";
+    for (i = 0; i <= 5; i++) {
+        var a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B',
+            'N',
+            'M', 'Q', 'W', 'E', 'R', 'T',
+            'Y', 'U', 'I', 'O', 'P', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e',
+            'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k',
+            'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'
+        ];
+        var a = a[Math.floor(Math.random() * 62)];
+        code = code + a;
+    }
+    $('#captcha').val(code);
     $('#icon-captcha').click(function() {
         var i;
         var code = "";
@@ -24,15 +38,41 @@ $(document).ready(function() {
     $('#submit').click(function() {
         var code = $('#captcha').val();
         var enter = $('#enter-captcha').val();
-        if (code == enter) {
-            alert(code);
+
+        var email = $('#emailorusername').val();
+        var mess = $('#messenger').val();
+
+
+        if (email != "" && mess != "") {
+            if (code == enter) {
+                $.post("postMess.php", {
+                        email: email,
+                        mess: mess
+                    },
+                    function(data) {
+                        alert("Thanks for feedback");
+                        $('#emailorusername').val("");
+                        $('#messenger').val("");
+                        $('#enter-captcha').val("");
+                        $('#icon-captcha').click();
+                    });
+            } else {
+                alert("Captcha incorrect !!");
+            }
+        } else {
+            alert("Please enter full infor !!");
         }
     });
 
 });
+$(document).ready(function() {
+    $('input#captcha').bind('copy paste', function(e) {
+        e.preventDefault();
+    });
+});
 </script>
 <style>
-    input[type=text]:disabled {
+input[type=text]:disabled {
     background: #dddddd;
 }
 </style>
@@ -60,44 +100,25 @@ $(document).ready(function() {
             <br>
             <div class="container col-8 centerPage">
                 <form action="">
-                    <div id="line-email" style="display :flex; margin-bottom: 16px;">
-                        <div style="margin-right: 20px; width: 110px;">
-                            <span>Solutation</span>
-                            <select class="form-control" name="" id="">
-                                <option value=""></option>
-                                <option value="Mr">Mr</option>
-                                <option value="Ms">Ms</option>
-                            </select>
-                        </div>
-                        <div style=" width: 300px;">
-                            <span>Surname</span>
-                            <input type="text" class="form-control" id="emailorusername" name="emailorusername">
-                        </div>
-                    </div>
                     <div style="margin-bottom: 16px;">
-                        <span>First name</span>
-                        <input type="text" class="form-control" id="emailorusername" name="emailorusername"
-                            style="width: 94%;">
-                    </div>
-                    <div style="margin-bottom: 16px;">
-                        <span>Email</span>
+                        <span>Your email</span>
                         <input type="email" class="form-control" id="emailorusername" name="emailorusername"
                             style="width: 94%;">
                     </div>
                     <div style="margin-bottom: 16px;">
                         <span>My message</span>
-                        <textarea class="form-control" name="" id="" cols="26" rows="10" style="width: 94%;"></textarea>
-                    </div>
-                    <div>
-                        <span>I am interested in</span>
-                        <select class="form-control" name="" id="" style="width: 94%;"></select>
+                        <textarea class="form-control" name="" id="messenger" cols="26" rows="10"
+                            style="width: 94%;"></textarea>
                     </div>
                     <div id="line-email" style="display :flex; margin-bottom: 16px;">
                         <div style="margin-right: 20px; width: 110px;">
                             <span>Captcha</span>
                             <div style="display: flex;">
-                                <input type="text" id="captcha" class="form-control" readonly="readonly" disabled="disabled" value=""
-                                    style="font-weight: bold; font-size: 15px; width: 96px;">
+                                <form action="">
+                                    <input type="text" id="captcha" class="form-control" readonly="readonly" value=""
+                                        disabled onpaste="return false;"
+                                        style="font-weight: bold; font-size: 15px; width: 96px;">
+                                </form>
                                 <div style="padding-top: 5px; padding-left: 10px;" id="icon-captcha">
                                     <span><i class="fas fa-sync-alt"></i></span>
                                 </div>

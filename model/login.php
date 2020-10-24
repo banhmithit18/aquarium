@@ -38,10 +38,14 @@ function OpenConnection(){
                 $passmh = md5($pass);
                 $email_data = $row['email'];
                 $pass_data = $row['password'];
+                $idacc = $row['accountid'];
                 if($email == $email_data && $passmh == $pass_data){
                     if($_POST['checkRemember'] == "true"){
                         $checkRemember = $_POST['checkRemember'];
                         setcookie('email',$email, time() + (86400 * 30));
+                        session_start();
+                        $_SESSION['email'] = $email_data;
+                        $_SESSION['idacc'] = $idacc;
                         setcookie('pass',$pass, time() + (86400 * 30));
                         setcookie('checkRemember',$checkRemember, time() + (86400 * 30));
                         $msg = "
@@ -50,6 +54,9 @@ function OpenConnection(){
                         </script>
                         ";
                     }else{
+                        session_start();
+                        $_SESSION['email'] = $email_data;
+                        $_SESSION['idacc'] = $idacc;
                         $checkRemember = $_POST['checkRemember'];
                         setcookie('email',$email, time() - (86400 * 30));
                         setcookie('pass',$pass, time() - (86400 * 30));

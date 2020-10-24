@@ -290,6 +290,89 @@ function Create($item ){
     {
         echo("Error");
     }
+}
+function getListAnimals(){
+    $conn = OpenConnection();
+    $query="SELECT * FROM fish";
+    $get_list_animals = sqlsrv_query($conn,$query);
+    while($row=sqlsrv_fetch_array($get_list_animals,SQLSRV_FETCH_ASSOC)){
+        $fish_name = $row['fishname'];
+        // $fishID = $row['fishid'];
+        // $nameImg = $fish_name.'0';
+        // $getImg = "SELECT * FROM images WHERE fishid = $fishID";
+
+        $img = $fish_name;
+        $img .= "0.jpg";
+        echo "
+        <div id='images'>
+                    <img class='fish' src='uploads/$fish_name/$img' alt=''>
+                    <span
+                        id='span-info'>
+                        <a href='infor-fish.php?fishid=$fish_name'>$fish_name</a>
+                    </span>
+                </div>
+                ";
+    }
+}
+function getListSearch($fishname){
+    // $fishname = $_POST['fishname'];
+    $conn = OpenConnection();
+    $query="SELECT * FROM fish WHERE fishname like 'ca1%'";
+    $get_list_animals = sqlsrv_query($conn,$query);
+    while($row=sqlsrv_fetch_array($get_list_animals,SQLSRV_FETCH_ASSOC)){
+    $fish_name = $row['fishname'];
+    // $fishID = $row['fishid'];
+    // $nameImg = $fish_name.'0';
+    // $getImg = "SELECT * FROM images WHERE fishid = $fishID";
+
+    $img = $fish_name;
+    $img .= "0.jpg";
+    echo "
+    <div id='images' >
+                <img class='fish' src='uploads/$fish_name/$img' alt=''>
+                <span
+                    style='font-size: 18px;font-weight: 500;color: #00789a;line-height: 1em;letter-spacing: -.04em; '>
+                    <a href='infor-fish.php?fishid=$fish_name'>$fish_name</a>
+                </span>
+            </div>
+            ";
+    }
+}
+function count1(){
+    $fishname= $_GET['fishid'];
+    $conn = OpenConnection();
+    //get location id
+    $sqllocation = "SELECT count(imagesid) as quantity from images where imagename like '$fishname%'";
+    $get = sqlsrv_query($conn,$sqllocation);
+    $count = sqlsrv_fetch_array($get,SQLSRV_FETCH_ASSOC);
+    
+    // $img = "uploads\$fishname\.$fishname'.'0.jpg'";
+    $img = "uploads/";
+    $img .= $fishname;
+    $img .= "/";
+    $img .= $fishname;
+    echo "<img src='$img' alt='' style='height: 431px; width: 100%; margin-bottom: 20px;'>";
+
+    $i = 0;
+    for($i = 0; $i < $count['quantity']; $i++){
+        if($i == 0){
+            echo "
+        <div class='carousel-item active' id='img$i'>
+            <img class='d-block w-100' id='panel-header-$i'
+            src='$img$i.jpg' alt='First slide' style='height: 442px;'>
+        </div>
+        ";
+        }else{
+            echo "
+        <div class='carousel-item' id='img$i'>
+            <img class='d-block w-100' id='panel-header-$i'
+            src='$img$i.jpg' alt='First slide' style='height: 442px;'>
+        </div>
+        ";
+        }
+        
+        
+    }
 } 
 
 function Update($item,$id,$cond ){
